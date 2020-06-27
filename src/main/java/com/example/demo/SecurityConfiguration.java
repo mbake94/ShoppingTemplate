@@ -12,22 +12,44 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 
+
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception{
+        httpSecurity.authorizeRequests()
+                .antMatchers("/guestview", "/signup", "/h2-console/**").permitAll()
+                .antMatchers("/adminview").hasRole("ADMIN")
+                .antMatchers("/**").hasAnyRole( "ADMIN", "USER")
+                .and()
+                .formLogin()
+                .loginPage("/login").permitAll()
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login?logout=true").permitAll();
+
+        httpSecurity.csrf().ignoringAntMatchers("/h2-console/**");
+        httpSecurity.headers().frameOptions().sameOrigin();
+
+    }
+
+
+
+    @Autowired
+    DataSource dataSource;
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .usersByUsernameQuery("select username, password, enabled from " + "user_db where username=?")
+                .authoritiesByUsernameQuery("select username, role from roles " + "where username =?");
+    }
     @Bean
-    public static BCryptPasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
-    }
-    @Override
-    protected void configure(HttpSecurity http) throws Exception{
-        http
-                .authorizeRequests().anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll();
-    }
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-        auth.inMemoryAuthentication().withUser("user").password(passwordEncoder().encode("user")).authorities("USER");
-        auth.inMemoryAuthentication().withUser("admin").password(passwordEncoder().encode("admin")).authorities("ADMIN");
     }
 }

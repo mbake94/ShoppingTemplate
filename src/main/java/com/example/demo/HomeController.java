@@ -21,14 +21,29 @@ public class HomeController {
     RoleRepository roleRepository;
 
     @RequestMapping("/")
-    public String home(){
+    public String guest(){
+        return "guestview";
+    }
+
+    @RequestMapping("/user")
+    public String user(){
         return "userview";
     }
 
-        @RequestMapping("/logout")
-        public String logout(){
+    @RequestMapping("/admin")
+    public String admin(){
+        return "adminview";
+    }
+
+    @RequestMapping("/logout")
+    public String logout(){
             return "redirect:/login?logout=true";
         }
+
+    @RequestMapping("/login")
+    public String login(){
+        return "login";
+    }
 
 
 }

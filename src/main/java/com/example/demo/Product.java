@@ -18,12 +18,14 @@ public class Product {
     private double price;
     private String size;
     private String description;
+    private String seller;
 
-    public Product(String name, double price, String size, String description) {
+    public Product(String name, double price, String size, String description, String seller) {
         this.name = name;
         this.price = price;
         this.size = size;
         this.description = description;
+        this.seller = seller;
     }
 
     public Product() {
@@ -67,5 +69,13 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSeller() {
+        return seller;
+    }
+
+    public void setSeller(String seller) {
+        this.seller = seller;
     }
 }
