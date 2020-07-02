@@ -20,11 +20,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.authorizeRequests()
-                .antMatchers("/guestview", "/signup", "/h2-console/**").permitAll()
+                .antMatchers("/", "/signup", "/h2-console/**").permitAll()
                 .antMatchers("/adminview").hasRole("ADMIN")
                 .antMatchers("/userview").hasRole("USER")
-                .antMatchers("/**").permitAll()
-//                .antMatchers("/**").hasAnyRole( "ADMIN", "USER")
+                .antMatchers("/**").hasAnyRole("ADMIN", "USER")
                 .and()
                 .formLogin()
                 .loginPage("/login").permitAll()

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,5 +46,15 @@ public class HomeController {
         return "login";
     }
 
+    @RequestMapping("/products")
+    public class ProductController {
 
+        @GetMapping("/all")
+        public String getAllProducts(Model model){
+            ArrayList<Product> listOfProducts = new ArrayList<>();
+
+            model.addAttribute("products", listOfProducts);
+            return "products_all";
+        }
+    }
 }
